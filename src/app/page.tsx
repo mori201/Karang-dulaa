@@ -79,7 +79,7 @@ export default async function HomePage() {
               <div className="flex items-center gap-3">
                 <LogoMark className="h-12 w-12" />
                 <div>
-                  <div className="text-xs font-bold uppercase tracking-widest text-gold-600">Mot du jour</div>
+                  <div className="text-xs font-bold uppercase tracking-widest text-gold-600">Un mot pour commencer</div>
                   <div className="mnk text-2xl font-extrabold text-forest">àbáríká</div>
                 </div>
               </div>

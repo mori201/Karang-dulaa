@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { getFeatures } from "@/lib/settings";
 import { SYSTEM_PROMPT, buildContext, extractTerms, type KnowledgeItem } from "@/lib/ai/prompt";
 
 export const runtime = "nodejs";
@@ -17,6 +18,7 @@ export async function POST(request: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return Response.json({ error: "DULAA AI n’est pas encore configuré sur cette plateforme." }, { status: 503 });
 
+  if (!(await getFeatures()).ai_assistant) return Response.json({ error: "DULAA AI est désactivé par l’administration." }, { status: 503 });
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return Response.json({ error: "Connexion requise." }, { status: 401 });

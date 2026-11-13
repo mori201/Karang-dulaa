@@ -6,6 +6,7 @@ import { AudioPlayer } from "@/components/learn/AudioPlayer";
 import { ConsentToggle, DeleteRecordingButton, Recorder } from "@/components/learn/Recorder";
 import { createClient } from "@/lib/supabase/server";
 import { getSessionUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
 import { signedUrls } from "@/lib/storage";
 import { formatDate, fold } from "@/lib/utils";
 
@@ -16,6 +17,7 @@ const KINDS: Record<string, string> = { word: "Mots", phrase: "Phrases", dialogu
 export default async function PronunciationPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const user = await getSessionUser();
+  const canKeep = (await getFeatures()).recordings;
   const supabase = await createClient();
   let query = supabase.from("audio_resources").select("id, title, kind, transcript, translation_fr, storage_path, speaker_name, speaker_region, lesson_id, lessons(title)").eq("status", "published").order("created_at", { ascending: false }).limit(60);
   if (sp.type && sp.type in KINDS) query = query.eq("kind", sp.type);
@@ -49,7 +51,7 @@ export default async function PronunciationPage({ searchParams }: { searchParams
         <button className="h-10 rounded-lg bg-forest px-4 font-semibold text-white">Filtrer</button>
       </form>
 
-      {user && <Card className="mb-6"><ConsentToggle consent={user.profile.recording_consent} /></Card>}
+      {user && canKeep && <Card className="mb-6"><ConsentToggle consent={user.profile.recording_consent} /></Card>}
 
       {audios.length === 0 ? (
         <EmptyState icon={<Headphones className="h-10 w-10" />} title="Aucun enregistrement publié pour le moment."
@@ -68,7 +70,7 @@ export default async function PronunciationPage({ searchParams }: { searchParams
                   : <p className="text-sm text-ink-400">Fichier indisponible.</p>}
                 <div className="mt-3 border-t border-sand-300 pt-3">
                   <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink-400">À vous</p>
-                  <Recorder audioId={a.id} loggedIn={!!user} consent={!!user?.profile.recording_consent} />
+                  <Recorder audioId={a.id} loggedIn={!!user && canKeep} consent={!!user?.profile.recording_consent} />
                 </div>
               </Card>
             );

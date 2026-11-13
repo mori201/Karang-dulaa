@@ -3,6 +3,8 @@ import { SubmitButton } from "@/components/ui/client";
 import { Flash } from "@/components/Flash";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
+import { Alert } from "@/components/ui";
 import { POS_LABELS, formatDate } from "@/lib/utils";
 import { submitWordAction } from "../actions";
 
@@ -21,7 +23,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
       <PageHeader eyebrow="Dictionnaire collaboratif" title="Proposer un mot"
         description="Votre proposition sera vérifiée par un enseignant ou un administrateur avant d’être publiée. Écrivez le mot tel qu’il se prononce dans votre parler et indiquez votre source." />
       <Flash searchParams={sp} />
-      <Card>
+      {!(await getFeatures()).lexical_submissions ? <Alert tone="info">Les propositions de mots sont temporairement fermées par l’administration.</Alert> : <Card>
         <form action={submitWordAction} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Mot mandinka" htmlFor="headword" required><Input id="headword" name="headword" defaultValue={sp.mot} required maxLength={120} className="mnk" /></Field>
@@ -44,7 +46,7 @@ export default async function ProposePage({ searchParams }: { searchParams: Prom
           <Field label="Source de l’information" htmlFor="source_info" required hint="Locuteur (avec son accord), région, ouvrage et page…"><Input id="source_info" name="source_info" required minLength={3} maxLength={500} /></Field>
           <SubmitButton pendingLabel="Envoi…">Envoyer ma proposition</SubmitButton>
         </form>
-      </Card>
+      </Card>}
       {(mine ?? []).length > 0 && (
         <Card className="mt-8">
           <h2 className="font-bold">Mes propositions</h2>

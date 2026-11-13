@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
 import { humanError, withFlash } from "@/lib/flash";
 import { safeNext, str } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ const submissionSchema = z.object({
 
 export async function submitWordAction(formData: FormData) {
   const user = await requireUser("/dictionnaire/proposer");
+  if (!(await getFeatures()).lexical_submissions) redirect(withFlash("/dictionnaire/proposer", "erreur", "Les propositions sont temporairement fermées."));
   const raw = Object.fromEntries(["headword", "translation_fr", "definition", "part_of_speech", "example_mandinka", "example_french", "regional_variant", "source_info"].map((k) => [k, str(formData.get(k))]));
   const parsed = submissionSchema.safeParse(raw);
   if (!parsed.success) redirect(withFlash("/dictionnaire/proposer", "erreur", parsed.error.issues[0]?.message ?? "Formulaire invalide."));

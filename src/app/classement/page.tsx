@@ -3,12 +3,14 @@ import { Trophy } from "lucide-react";
 import { Alert, Card, EmptyState, PageHeader } from "@/components/ui";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
 
 export const metadata = { title: "Classement" };
 
 export default async function LeaderboardPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const sp = await searchParams;
   const user = await requireUser("/classement");
+  if (!(await getFeatures()).leaderboard) return <div className="container-kd max-w-2xl py-12"><Alert tone="info">Le classement est désactivé par l’administration.</Alert></div>;
   const days = sp.periode === "mois" ? 30 : 7;
   const supabase = await createClient();
   const { data } = await supabase.rpc("leaderboard", { p_days: days });

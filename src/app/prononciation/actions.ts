@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
 
 export async function setRecordingConsent(consent: boolean) {
   const user = await requireUser("/prononciation");
@@ -12,6 +13,7 @@ export async function setRecordingConsent(consent: boolean) {
 
 export async function saveRecording(formData: FormData) {
   const user = await requireUser("/prononciation");
+  if (!(await getFeatures()).recordings) return { ok: false, error: "La conservation des enregistrements est désactivée." };
   if (!user.profile.recording_consent) return { ok: false, error: "Consentement requis pour conserver vos enregistrements." };
   const file = formData.get("audio") as File | null;
   const audioId = String(formData.get("audio_id") ?? "") || null;

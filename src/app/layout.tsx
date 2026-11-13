@@ -4,6 +4,8 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SITE_URL } from "@/lib/env";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "KARANG-DULAA — L’école virtuelle de la langue mandinka", template: "%s · KARANG-DULAA" },

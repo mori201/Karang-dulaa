@@ -5,6 +5,7 @@ import { Alert, ButtonLink, PageHeader } from "@/components/ui";
 import { Chat } from "@/components/Chat";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth";
+import { getFeatures } from "@/lib/settings";
 import { formatDate } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "DULAA AI — Mon professeur mandinka" };
@@ -13,7 +14,8 @@ export default async function AssistantPage({ searchParams }: { searchParams: Pr
   const sp = await searchParams;
   const user = await requireUser("/assistant");
   const supabase = await createClient();
-  const configured = Boolean(process.env.ANTHROPIC_API_KEY);
+  const enabled = (await getFeatures()).ai_assistant;
+  const configured = enabled && Boolean(process.env.ANTHROPIC_API_KEY);
   const { data: convs } = await supabase.from("ai_conversations").select("id, title, updated_at").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(20);
   const current = sp.c && (convs ?? []).some((c) => c.id === sp.c) ? sp.c : null;
   const { data: msgs } = current ? await supabase.from("ai_messages").select("role, content, sources").eq("conversation_id", current).order("created_at") : { data: [] };
@@ -23,7 +25,8 @@ export default async function AssistantPage({ searchParams }: { searchParams: Pr
       <PageHeader eyebrow="Assistant pédagogique" title="DULAA AI — Mon professeur mandinka"
         description="Expliquer un mot, comprendre une leçon, s’entraîner, corriger une phrase…"
         actions={<ButtonLink href="/assistant" variant="outline" size="sm"><MessageSquarePlus className="h-4 w-4" /> Nouvelle conversation</ButtonLink>} />
-      {!configured && <Alert tone="warning" className="mb-4">DULAA AI n’est pas encore activé sur cette plateforme (clé du modèle de langage non configurée par l’administrateur).</Alert>}
+      {!enabled && <Alert tone="warning" className="mb-4">DULAA AI est temporairement désactivé par l’administration.</Alert>}
+      {enabled && !configured && <Alert tone="warning" className="mb-4">DULAA AI n’est pas encore activé sur cette plateforme (clé du modèle de langage non configurée par l’administrateur).</Alert>}
       <Alert tone="info" className="mb-4">
         DULAA AI peut se tromper. Les réponses marquées « 📘 Documenté » s’appuient sur la base validée et citent leurs sources ; celles marquées « 💡 Suggestion » sont à vérifier auprès d’un enseignant.
       </Alert>

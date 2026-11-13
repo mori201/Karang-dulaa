@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { BookOpen, ClipboardCheck, MessagesSquare, PlusCircle, Users } from "lucide-react";
-import { Badge, ButtonLink, Card, EmptyState, PageHeader, StatCard } from "@/components/ui";
+import { Badge, ButtonLink, EmptyState, PageHeader, StatCard } from "@/components/ui";
 import { Flash } from "@/components/Flash";
 import { createClient } from "@/lib/supabase/server";
 import { requireStaff } from "@/lib/auth";
