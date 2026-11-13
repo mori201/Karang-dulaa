@@ -69,6 +69,8 @@ select public.t_assert((select count(*) from public.answers) = 0, 'élève : tab
 select public.t_expect_error($$select public.get_exercise_for_student('ee000000-0000-4000-8000-000000000001')$$, 'élève non inscrit : exercice refusé');
 select public.t_expect_error($$insert into public.users_roles (user_id, role) values (auth.uid(), 'admin')$$, 'élève : auto-promotion admin refusée');
 select public.t_expect_error($$update public.profiles set xp = 9999 where id = auth.uid()$$, 'élève : modification directe de l''XP refusée');
+select public.t_expect_error($$select public.kd_add_xp(auth.uid(), 9999, 'triche', null)$$, 'élève : fonction interne kd_add_xp inaccessible');
+select public.t_expect_error($$select public.kd_notify(auth.uid(), 'x', 'x', 'x', null)$$, 'élève : fonction interne kd_notify inaccessible');
 update public.profiles set first_name = 'Coumba', weekly_goal_minutes = 90 where id = auth.uid();
 select public.enroll_in_course('c0000000-0000-4000-8000-000000000001');
 select public.t_assert((select count(*) from public.lesson_contents) > 20, 'élève inscrit : contenu des leçons visible');

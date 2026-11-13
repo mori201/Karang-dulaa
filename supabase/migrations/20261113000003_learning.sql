@@ -641,7 +641,7 @@ create trigger course_question_replies_notify after insert on public.course_ques
 -- ---------------------------------------------------------------------
 -- Droits d'exécution
 -- ---------------------------------------------------------------------
-revoke execute on all functions in schema public from public, anon;
+revoke execute on all functions in schema public from public, anon, authenticated;
 grant execute on function public.kd_fold(text), public.kd_fold_array(text[]) to anon, authenticated;
 grant execute on function public.has_role(public.app_role), public.is_admin(), public.is_teacher(), public.is_staff(),
   public.can_manage_course(uuid), public.is_enrolled(uuid), public.course_is_published(uuid),

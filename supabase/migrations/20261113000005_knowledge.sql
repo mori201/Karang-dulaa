@@ -45,4 +45,5 @@ language sql stable security invoker set search_path = '' as $$
   order by score desc nulls last, title
   limit least(greatest(p_limit, 1), 30);
 $$;
+revoke execute on function public.search_knowledge(text[], int) from public, anon;
 grant execute on function public.search_knowledge(text[], int) to authenticated;

@@ -25,7 +25,7 @@ export function ImportUploader({ sources }: { sources: { id: string; author: str
     if (!file) return setError("Choisissez un fichier.");
     const mime = file.type || (file.name.endsWith(".csv") ? "text/csv" : file.name.endsWith(".txt") ? "text/plain" : "");
     if (!ACCEPT.includes(mime)) return setError("Formats acceptés : PDF, DOCX, TXT, CSV.");
-    if (file.size > 100 * 1024 * 1024) return setError("Fichier trop volumineux (100 Mo maximum).");
+    if (file.size > 50 * 1024 * 1024) return setError("Fichier trop volumineux (50 Mo maximum).");
     setStatus("Envoi du fichier dans la bibliothèque privée…");
     const safe = file.name.normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-zA-Z0-9._-]+/g, "-");
     const path = `imports/${Date.now()}-${safe}`;

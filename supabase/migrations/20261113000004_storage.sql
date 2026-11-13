@@ -18,7 +18,7 @@ insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_typ
      'text/plain','text/csv','image/jpeg','image/png','image/webp','video/mp4','video/webm',
      'audio/mpeg','audio/mp4','audio/ogg','audio/wav','audio/webm']),
   ('audio', 'audio', false, 20971520, array['audio/mpeg','audio/mp4','audio/ogg','audio/wav','audio/webm','audio/x-wav','audio/aac']),
-  ('sources', 'sources', false, 104857600, array[
+  ('sources', 'sources', false, 52428800, array[
      'application/pdf','text/plain','text/csv',
      'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
   ('recordings', 'recordings', false, 5242880, array['audio/webm','audio/ogg','audio/mp4','audio/wav','audio/mpeg']),
