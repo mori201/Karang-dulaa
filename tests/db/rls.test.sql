@@ -202,5 +202,19 @@ select public.t_assert(exists (select 1 from public.dictionary_entries where hea
 select public.t_assert(exists (select 1 from public.dictionary_entries where headword_fold = 'bun'), 'recherche : búŋ ↔ bun');
 select public.t_assert(public.kd_fold('Mandiŋkakáŋo') = 'mandinkakano', 'normalisation ŋ et tons');
 
+
+-- Recherche RAG (droits de l'appelant)
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-4000-8000-0000000000c2';
+select public.t_assert((select count(*) from public.search_knowledge(array['merci'], 10) where kind = 'dictionnaire') >= 1, 'RAG : dictionnaire interrogé');
+select public.t_assert((select count(*) from public.search_knowledge(array['vendredi'], 10) where kind = 'leçon') = 0, 'RAG : leçons d''un cours non suivi exclues');
+commit;
+begin;
+set local role authenticated;
+set local request.jwt.claim.sub = '00000000-0000-4000-8000-0000000000c1';
+select public.t_assert((select count(*) from public.search_knowledge(array['vendredi'], 10) where kind = 'leçon') >= 1, 'RAG : leçons du cours suivi incluses');
+commit;
+
 drop function public.t_assert(boolean, text);
 drop function public.t_expect_error(text, text);

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KARANG-DULAA">
+  <rect width="64" height="64" rx="16" fill="#126B4B"/>
+  <path d="M32 7 41 16 32 25 23 16Z" fill="#D6A84B"/>
+  <path d="M32 12 36 16 32 20 28 16Z" fill="#126B4B"/>
+  <path d="M12 28c8-3.5 14.5-2.5 20 2 5.5-4.5 12-5.5 20-2v23c-8-3-14.5-2-20 2.5-5.5-4.5-12-5.5-20-2.5Z" fill="#F7F3E9"/>
+  <path d="M32 30v25.5" stroke="#126B4B" stroke-width="2"/>
+  <path d="M17 35.5l3.5 3.5 3.5-3.5 3.5 3.5M37 35.5l3.5 3.5 3.5-3.5 3.5 3.5M17 43l3.5 3.5 3.5-3.5 3.5 3.5M37 43l3.5 3.5 3.5-3.5 3.5 3.5" fill="none" stroke="#D6A84B" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>
